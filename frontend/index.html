@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeoChain</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>GeoChain</h1>
+    <span id="date-display"></span>
+
+    <div id="challenge">
+      <span>Start: <strong id="start-letter">…</strong></span>
+      <span>→</span>
+      <span>Cel: <strong id="end-letter">…</strong></span>
+    </div>
+
+    <ol id="chain-list"></ol>
+
+    <div id="input-area">
+      <span id="current-letter-hint">
+        Następna litera: <strong id="current-letter">…</strong>
+      </span>
+      <form id="country-form">
+        <input
+          type="text"
+          id="country-input"
+          placeholder="Wpisz nazwę kraju…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button type="submit">Wyślij</button>
+      </form>
+      <p id="message"></p>
+    </div>
+
+    <div id="win-overlay" class="hidden">
+      <div id="win-box">
+        <h2>Gratulacje! 🎉</h2>
+        <strong id="final-score"></strong>
+        <p>krajów w łańcuchu</p>
+        <p id="win-chain"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
