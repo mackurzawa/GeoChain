@@ -4,7 +4,119 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GeoChain</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    #app { width: 100%; max-width: 540px; }
+
+    h1 { font-size: 2rem; letter-spacing: 2px; margin-bottom: 0.25rem; }
+
+    #date-display { font-size: 0.85rem; color: #888; display: block; margin-bottom: 1.25rem; }
+
+    #challenge {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      font-size: 1.2rem;
+      background: #fff;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-bottom: 1.25rem;
+    }
+    #challenge strong { font-size: 1.5rem; color: #1a73e8; }
+
+    #chain-list {
+      list-style: decimal inside;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      min-height: 3rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      line-height: 2;
+    }
+    #chain-list:empty::before {
+      content: "Łańcuch pojawi się tutaj…";
+      color: #aaa;
+      font-style: italic;
+    }
+
+    #input-area { display: flex; flex-direction: column; gap: 0.6rem; }
+    #current-letter-hint { font-size: 0.9rem; color: #555; }
+    #current-letter { font-size: 1.1rem; color: #1a73e8; }
+
+    #country-form { display: flex; gap: 0.5rem; }
+    #country-input {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+    #country-input:focus { border-color: #1a73e8; }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background: #1558b0; }
+
+    #message { font-size: 0.9rem; min-height: 1.2em; }
+    #message.ok    { color: #2a7a2a; }
+    #message.error { color: #c0392b; }
+
+    .hidden { display: none !important; }
+
+    #win-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #win-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+    }
+    #win-box h2 { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    #win-box p  { margin-bottom: 0.5rem; font-size: 1rem; color: #555; }
+    #final-score { font-size: 2.5rem; color: #1a73e8; display: block; margin: 0.5rem 0; }
+    #win-chain { font-size: 0.8rem; word-break: break-word; }
+
+    #js-error {
+      background: #fdd;
+      border: 1px solid #c00;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 1rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
   <div id="app">
@@ -44,8 +156,18 @@
         <p id="win-chain"></p>
       </div>
     </div>
+
+    <div id="js-error" class="hidden"></div>
   </div>
 
+  <script>
+    window.onerror = function(msg, src, line, col, err) {
+      var box = document.getElementById('js-error');
+      box.classList.remove('hidden');
+      box.textContent = 'Błąd JavaScript:\n' + msg + '\n' + src + ':' + line;
+      return false;
+    };
+  </script>
   <script src="game.js"></script>
 </body>
 </html>
