@@ -31,6 +31,42 @@ function getDailyChallenge() {
     };
 }
 
+// ── streak ────────────────────────────────────────────────────────────────────
+const STREAK_KEY = "geochain_streak";
+
+function loadStreakData() {
+    try {
+        return JSON.parse(localStorage.getItem(STREAK_KEY)) || { streak: 0, lastSolvedDate: null };
+    } catch {
+        return { streak: 0, lastSolvedDate: null };
+    }
+}
+
+function saveStreakData(data) {
+    localStorage.setItem(STREAK_KEY, JSON.stringify(data));
+}
+
+function yesterday(dateStr) {
+    const d = new Date(dateStr + "T12:00:00");
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().slice(0, 10);
+}
+
+function streakStatusOnLoad(today) {
+    const data = loadStreakData();
+    if (data.lastSolvedDate === today)            return { alreadySolved: true,  streak: data.streak };
+    if (data.lastSolvedDate === yesterday(today)) return { alreadySolved: false, streak: data.streak, active: true };
+    return { alreadySolved: false, streak: 0, active: false };
+}
+
+function recordWin(today) {
+    const data = loadStreakData();
+    if (data.lastSolvedDate === today) return data.streak; // already counted (page refresh)
+    const newStreak = data.lastSolvedDate === yesterday(today) ? data.streak + 1 : 1;
+    saveStreakData({ streak: newStreak, lastSolvedDate: today });
+    return newStreak;
+}
+
 // ── state ─────────────────────────────────────────────────────────────────────
 let countries = [];       // [{name, first, last}]
 let challenge = null;     // {date, start, end}
@@ -52,6 +88,18 @@ function init() {
     document.getElementById("end-letter").textContent = challenge.end;
     document.getElementById("current-letter").textContent = currentLetter;
     document.getElementById("date-display").textContent = challenge.date;
+
+    const streakStatus = streakStatusOnLoad(challenge.date);
+    const banner = document.getElementById("streak-banner");
+
+    if (streakStatus.alreadySolved) {
+        banner.textContent = `✅ Dzisiaj już grałeś! 🔥 Passa: ${streakStatus.streak} ${streakStatus.streak === 1 ? "dzień" : "dni"}`;
+        banner.className = "streak-done";
+        document.getElementById("input-area").classList.add("hidden");
+    } else if (streakStatus.active && streakStatus.streak > 0) {
+        banner.textContent = `🔥 Passa: ${streakStatus.streak} ${streakStatus.streak === 1 ? "dzień" : "dni"} — utrzymaj ją!`;
+        banner.className = "streak-active";
+    }
 
     document.getElementById("country-form").addEventListener("submit", onSubmit);
     document.getElementById("country-input").focus();
@@ -132,8 +180,11 @@ function copyResult() {
 }
 
 function showWin() {
+    const newStreak = recordWin(challenge.date);
     document.getElementById("final-score").textContent = chain.length;
     document.getElementById("win-chain").textContent = buildShareText();
+    document.getElementById("win-streak").textContent =
+        `🔥 Passa: ${newStreak} ${newStreak === 1 ? "dzień" : "dni"}`;
     document.getElementById("win-overlay").classList.remove("hidden");
     document.getElementById("input-area").classList.add("hidden");
 }

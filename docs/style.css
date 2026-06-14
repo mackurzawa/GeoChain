@@ -119,3 +119,16 @@ button:hover { background: #1558b0; }
 #copy-msg  { font-size: 0.85rem; color: #2a7a2a; min-height: 1.2em; margin-top: 0.4rem; }
 
 #difficulty-display { font-size: 0.9rem; color: #555; margin-bottom: 1rem; }
+
+#streak-banner {
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+#streak-banner:empty { display: none; }
+#streak-banner.streak-active { background: #fff7e6; color: #b85c00; border: 1px solid #f5c07a; }
+#streak-banner.streak-done   { background: #eaf6ea; color: #2a7a2a; border: 1px solid #a3d9a3; }
+
+#win-streak { font-size: 1.1rem; font-weight: 700; color: #b85c00; margin-bottom: 0.25rem; }
